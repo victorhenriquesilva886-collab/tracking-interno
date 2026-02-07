@@ -1,45 +1,22 @@
-<!DOCTYPE html>
-<html lang="pt-BR">
-<head>
-  <meta charset="UTF-8">
-  <title>Rastreamento Interno</title>
-  <link rel="stylesheet" href="style.css">
-</head>
-<body>
-
-<div class="container">
-  <h1>Lote: <span id="loteId">CAP-2026-01</span></h1>
-
-  <div class="card">
-    <p><strong>Componente:</strong> Capacitor</p>
-    <p><strong>Quantidade inicial:</strong> 10</p>
+<p><strong>Quantidade inicial:</strong> 10</p>
     <p><strong>Quantidade atual:</strong> <span id="qtdAtual">10</span></p>
     <p><strong>Status:</strong> <span id="status">Em análise</span></p>
   </div>
 
   <h2>Linha do Tempo</h2>
-  <ul id="timeline"></ul>
 
-  <button onclick="abrirFormulario()">Registrar movimentação</button>
+<div id="timeline"></div>
 
-  <div id="formulario" class="modal">
-    <div class="modal-content">
-      <h3>Registrar movimentação</h3>
+<hr>
 
-      <label>Laboratório</label>
-      <input type="text" id="lab">
+<h3>Registrar movimentação</h3>
 
-      <label>Entrada</label>
-      <input type="number" id="entrada">
+<input type="text" id="lab" placeholder="Laboratório">
+<input type="number" id="entrada" placeholder="Entrada">
+<input type="number" id="saida" placeholder="Saída">
+<input type="text" id="obs" placeholder="Observação">
 
-      <label>Saída</label>
-      <input type="number" id="saida">
-
-      <label>Observação</label>
-      <input type="text" id="obs">
-
-      <button onclick="registrar()">Salvar</button>
-      <button onclick="fecharFormulario()">Cancelar</button>
+<button onclick="registrarMovimentacao()">Salvar</button>
     </div>
   </div>
 </div>
@@ -47,3 +24,104 @@
 <script src="script.js"></script>
 </body>
 </html>
+body {
+  font-family: Arial, sans-serif;
+  background: #f4f6f8;
+}
+
+.container {
+  max-width: 600px;
+  margin: auto;
+  padding: 20px;
+}
+
+.card {
+  background: white;
+  padding: 15px;
+  border-radius: 6px;
+  margin-bottom: 20px;
+}
+
+ul {
+  list-style: none;
+  padding: 0;
+}
+
+li {
+  background: white;
+  margin-bottom: 8px;
+  padding: 10px;
+  border-left: 5px solid green;
+}
+
+button {
+  padding: 10px;
+  margin-top: 10px;
+  width: 100%;
+}
+
+.modal {
+  display: none;
+  position: fixed;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  background: rgba(0,0,0,0.5);
+}
+
+.modal-content {
+  background: white;
+  margin: 10% auto;
+  padding: 20px;
+  width: 90%;
+  max-width: 400px;
+}
+<script>
+
+function carregarTimeline() {
+
+  const timeline = document.getElementById("timeline");
+  const historico = JSON.parse(localStorage.getItem("movimentacoes")) || [];
+
+  timeline.innerHTML = "";
+
+  historico.forEach(item => {
+
+    timeline.innerHTML += `
+      <div style="border:1px solid #ccc; padding:10px; margin:5px;">
+        <strong>Laboratório:</strong> ${item.lab} <br>
+        <strong>Entrada:</strong> ${item.entrada} <br>
+        <strong>Saída:</strong> ${item.saida} <br>
+        <strong>Observação:</strong> ${item.obs} <br>
+        <strong>Data:</strong> ${item.data}
+      </div>
+    `;
+
+  });
+}
+
+function registrarMovimentacao() {
+
+  const lab = document.getElementById("lab").value;
+  const entrada = document.getElementById("entrada").value;
+  const saida = document.getElementById("saida").value;
+  const obs = document.getElementById("obs").value;
+
+  const registro = {
+    lab,
+    entrada,
+    saida,
+    obs,
+    data: new Date().toLocaleString()
+  };
+
+  let historico = JSON.parse(localStorage.getItem("movimentacoes")) || [];
+  historico.push(registro);
+
+  localStorage.setItem("movimentacoes", JSON.stringify(historico));
+
+  carregarTimeline();
+}
+
+carregarTimeline();
+
+</script>
