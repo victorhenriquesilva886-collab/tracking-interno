@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <title>Rastreamento Interno</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div class="container">
+  <h1>Lote: <span id="loteId">CAP-2026-01</span></h1>
+
+  <div class="card">
+    <p><strong>Componente:</strong> Capacitor</p>
+    <p><strong>Quantidade inicial:</strong> 10</p>
+    <p><strong>Quantidade atual:</strong> <span id="qtdAtual">10</span></p>
+    <p><strong>Status:</strong> <span id="status">Em análise</span></p>
+  </div>
+
+  <h2>Linha do Tempo</h2>
+  <ul id="timeline"></ul>
+
+  <button onclick="abrirFormulario()">Registrar movimentação</button>
+
+  <div id="formulario" class="modal">
+    <div class="modal-content">
+      <h3>Registrar movimentação</h3>
+
+      <label>Laboratório</label>
+      <input type="text" id="lab">
+
+      <label>Entrada</label>
+      <input type="number" id="entrada">
+
+      <label>Saída</label>
+      <input type="number" id="saida">
+
+      <label>Observação</label>
+      <input type="text" id="obs">
+
+      <button onclick="registrar()">Salvar</button>
+      <button onclick="fecharFormulario()">Cancelar</button>
+    </div>
+  </div>
+</div>
+
+<script src="script.js"></script>
+</body>
+</html>
