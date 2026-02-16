@@ -1,127 +1,168 @@
-<p><strong>Quantidade inicial:</strong> 10</p>
-    <p><strong>Quantidade atual:</strong> <span id="qtdAtual">10</span></p>
-    <p><strong>Status:</strong> <span id="status">Em análise</span></p>
-  </div>
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tracking Lab - DHL Style</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <style>
+        :root { --dhl-red: #d40511; --dhl-yellow: #ffcc00; --bg: #f4f4f4; }
+        body { font-family: sans-serif; background: var(--bg); margin: 0; padding: 20px; }
+        .container { max-width: 600px; margin: auto; }
+        h1 { color: var(--dhl-red); border-bottom: 3px solid var(--dhl-yellow); padding-bottom: 10px; text-transform: uppercase; font-style: italic; }
+        .card { background: white; border-radius: 8px; padding: 15px; margin-bottom: 20px; box-shadow: 0 4px 6px rgba(0,0,0,0.1); position: relative; }
+        
+        /* Barra de Progresso */
+        .step-container { display: flex; justify-content: space-between; margin: 20px 0; position: relative; }
+        .step { width: 25px; height: 25px; border-radius: 50%; background: #ccc; display: flex; align-items: center; justify-content: center; font-size: 10px; color: white; z-index: 2; }
+        .step.active { background: var(--dhl-red); box-shadow: 0 0 5px var(--dhl-red); }
+        .step-line { position: absolute; top: 12px; left: 0; right: 0; height: 2px; background: #ccc; z-index: 1; }
 
-  <h2>Linha do Tempo</h2>
+        .form-group { margin-bottom: 15px; }
+        label { display: block; font-weight: bold; margin-bottom: 5px; font-size: 0.9em; }
+        input, select, textarea { width: 100%; padding: 12px; border: 1px solid #ddd; border-radius: 4px; box-sizing: border-box; font-size: 16px; }
+        
+        .btn-main { width: 100%; padding: 15px; background: var(--dhl-red); color: white; border: none; border-radius: 4px; font-weight: bold; cursor: pointer; }
+        .btn-pdf { background: #333; color: white; border: none; padding: 8px 12px; border-radius: 4px; cursor: pointer; font-size: 0.8em; margin-top: 10px; width: 100%; }
+        
+        .timeline-item { border-left: 3px solid var(--dhl-yellow); padding-left: 15px; margin: 10px 0; font-size: 0.85em; }
+        .tag { background: var(--dhl-yellow); color: #000; padding: 2px 8px; border-radius: 4px; font-size: 0.7em; font-weight: bold; }
+    </style>
+</head>
+<body>
 
-<div id="timeline"></div>
+<div class="container">
+    <h1>Logística de Amostras</h1>
 
-<hr>
-
-<h3>Registrar movimentação</h3>
-
-<input type="text" id="lab" placeholder="Laboratório">
-<input type="number" id="entrada" placeholder="Entrada">
-<input type="number" id="saida" placeholder="Saída">
-<input type="text" id="obs" placeholder="Observação">
-
-<button onclick="registrarMovimentacao()">Salvar</button>
+    <div class="card">
+        <h3>Atualizar Compressor</h3>
+        <div class="form-group">
+            <label>ID do Compressor (Ex: COMP-99)</label>
+            <input type="text" id="sku" placeholder="Identificador único">
+        </div>
+        <div class="form-group">
+            <label>Próxima Etapa</label>
+            <select id="etapa">
+                <option value="1">1. Laboratório (Testes)</option>
+                <option value="2">2. Preparação/Pintura</option>
+                <option value="3">3. Expedição (Saída)</option>
+                <option value="4">4. No Cliente (Uso)</option>
+                <option value="5">5. Coleta de Resultados</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label>Relato Técnico / Observação</label>
+            <textarea id="obs" rows="2" placeholder="Descreva o que foi feito..."></textarea>
+        </div>
+        <button class="btn-main" onclick="salvarMovimentacao()">Registrar no Sistema</button>
     </div>
-  </div>
+
+    <div id="listaRastreio"></div>
 </div>
 
-<script src="script.js"></script>
+<script>
+    let dados = JSON.parse(localStorage.getItem('tracking_dhl')) || [];
+    const nomesEtapas = ["", "Laboratório", "Preparação", "Expedição", "No Cliente", "Concluído"];
+
+    function salvarMovimentacao() {
+        const sku = document.getElementById('sku').value;
+        const etapa = document.getElementById('etapa').value;
+        const obs = document.getElementById('obs').value;
+        const data = new Date().toLocaleString('pt-BR');
+
+        if(!sku) return alert("Identifique o compressor!");
+
+        // Busca se já existe esse compressor para manter o histórico agrupado
+        let compressor = dados.find(c => c.sku === sku);
+        if(!compressor) {
+            compressor = { sku: sku, logs: [] };
+            dados.unshift(compressor);
+        }
+
+        compressor.etapa_atual = etapa;
+        compressor.logs.unshift({ etapa: nomesEtapas[etapa], obs, data });
+
+        localStorage.setItem('tracking_dhl', JSON.stringify(dados));
+        renderizar();
+        document.getElementById('obs').value = '';
+    }
+
+    function gerarPDF(sku) {
+        const { jsPDF } = window.jspdf;
+        const doc = new jsPDF();
+        const compressor = dados.find(c => c.sku === sku);
+
+        // Cabeçalho Estilo Relatório
+        doc.setFillColor(212, 5, 17); // Vermelho DHL
+        doc.rect(0, 0, 210, 30, 'F');
+        doc.setTextColor(255, 255, 255);
+        doc.setFontSize(22);
+        doc.text("RELATÓRIO DE LOGÍSTICA - AMOSTRAS", 15, 20);
+
+        doc.setTextColor(0, 0, 0);
+        doc.setFontSize(14);
+        doc.text(`Identificação: ${sku}`, 15, 45);
+        doc.text(`Status Atual: ${nomesEtapas[compressor.etapa_atual]}`, 15, 55);
+        doc.text(`Data de Emissão: ${new Date().toLocaleDateString()}`, 15, 65);
+        
+        doc.setLineWidth(0.5);
+        doc.line(15, 70, 195, 70);
+
+        // Listar Histórico no PDF
+        let y = 80;
+        doc.setFontSize(12);
+        doc.text("Histórico de Movimentação:", 15, y);
+        y += 10;
+
+        compressor.logs.forEach(log => {
+            if(y > 270) { doc.addPage(); y = 20; }
+            doc.setFontSize(10);
+            doc.setFont(undefined, 'bold');
+            doc.text(`${log.data} - ${log.etapa}`, 15, y);
+            y += 5;
+            doc.setFont(undefined, 'normal');
+            doc.text(`Nota: ${log.obs}`, 15, y, { maxWidth: 180 });
+            y += 12;
+        });
+
+        doc.save(`Relatorio_${sku}.pdf`);
+    }
+
+    function renderizar() {
+        const lista = document.getElementById('listaRastreio');
+        lista.innerHTML = '<h2>Fluxo de Amostras</h2>';
+
+        dados.forEach((comp) => {
+            const card = document.createElement('div');
+            card.className = 'card';
+            
+            let steps = '';
+            for(let i=1; i<=5; i++) {
+                steps += `<div class="step ${i <= comp.etapa_atual ? 'active' : ''}">${i}</div>`;
+            }
+
+            card.innerHTML = `
+                <div style="display:flex; justify-content:space-between;">
+                    <strong>ID: ${comp.sku}</strong>
+                    <span class="tag">${nomesEtapas[comp.etapa_atual]}</span>
+                </div>
+                <div class="step-container">
+                    <div class="step-line"></div>
+                    ${steps}
+                </div>
+                <div class="timeline-item">
+                    <strong>Última atualização:</strong><br>
+                    ${comp.logs[0].obs} <br>
+                    <small>${comp.logs[0].data}</small>
+                </div>
+                <button class="btn-pdf" onclick="gerarPDF('${comp.sku}')">⬇ Baixar Relatório PDF</button>
+            `;
+            lista.appendChild(card);
+        });
+    }
+
+    renderizar();
+</script>
+
 </body>
 </html>
-<style>
-body {
-  font-family: Arial, sans-serif;
-  background: #f4f6f8;
-}
-
-.container {
-  max-width: 600px;
-  margin: auto;
-  padding: 20px;
-}
-
-.card {
-  background: white;
-  padding: 15px;
-  border-radius: 6px;
-  margin-bottom: 20px;
-}
-
-ul {
-  list-style: none;
-  padding: 0;
-}
-
-li {
-  background: white;
-  margin-bottom: 8px;
-  padding: 10px;
-  border-left: 5px solid green;
-}
-
-button {
-  padding: 10px;
-  margin-top: 10px;
-  width: 100%;
-}
-
-.modal {
-  display: none;
-  position: fixed;
-  top: 0; left: 0;
-  width: 100%; height: 100%;
-  background: rgba(0,0,0,0.5);
-}
-
-.modal-content {
-  background: white;
-  margin: 10% auto;
-  padding: 20px;
-  width: 90%;
-  max-width: 400px;}</style>
-<script>
-
-function carregarTimeline() {
-
-  const timeline = document.getElementById("timeline");
-  const historico = JSON.parse(localStorage.getItem("movimentacoes")) || [];
-
-  timeline.innerHTML = "";
-
-  historico.forEach(item => {
-
-    timeline.innerHTML += `
-      <div style="border:1px solid #ccc; padding:10px; margin:5px;">
-        <strong>Laboratório:</strong> ${item.lab} <br>
-        <strong>Entrada:</strong> ${item.entrada} <br>
-        <strong>Saída:</strong> ${item.saida} <br>
-        <strong>Observação:</strong> ${item.obs} <br>
-        <strong>Data:</strong> ${item.data}
-      </div>
-    `;
-
-  });
-}
-
-function registrarMovimentacao() {
-
-  const lab = document.getElementById("lab").value;
-  const entrada = document.getElementById("entrada").value;
-  const saida = document.getElementById("saida").value;
-  const obs = document.getElementById("obs").value;
-
-  const registro = {
-    lab,
-    entrada,
-    saida,
-    obs,
-    data: new Date().toLocaleString()
-  };
-
-  let historico = JSON.parse(localStorage.getItem("movimentacoes")) || [];
-  historico.push(registro);
-
-  localStorage.setItem("movimentacoes", JSON.stringify(historico));
-
-  carregarTimeline();
-}
-
-carregarTimeline();
-
-</script>
