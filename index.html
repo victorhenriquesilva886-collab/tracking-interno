@@ -9,6 +9,8 @@
 :root {
   --red: #d40511;
   --yellow: #ffcc00;
+  --green: #2ecc71;
+  --gray: #ccc;
   --bg: #f4f4f4;
 }
 
@@ -20,7 +22,7 @@ body {
 }
 
 .container {
-  max-width: 600px;
+  max-width: 700px;
   margin: auto;
 }
 
@@ -54,10 +56,6 @@ input, textarea, select {
   font-size: 16px;
 }
 
-textarea {
-  resize: none;
-}
-
 button {
   width: 100%;
   padding: 15px;
@@ -75,7 +73,7 @@ button {
 }
 
 .btn-ok {
-  background: green;
+  background: var(--green);
   color: white;
 }
 
@@ -83,14 +81,56 @@ button {
   display: none;
 }
 
-.tag {
-  background: var(--yellow);
-  padding: 4px 10px;
-  font-size: 12px;
-  border-radius: 5px;
-  font-weight: bold;
+/* FLUXOGRAMA */
+.flow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin: 25px 0;
+  position: relative;
 }
 
+.flow::before {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 5%;
+  right: 5%;
+  height: 4px;
+  background: var(--gray);
+  z-index: 0;
+}
+
+.flow-step {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  z-index: 1;
+  width: 80px;
+  text-align: center;
+  font-size: 12px;
+}
+
+.flow-dot {
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background: var(--gray);
+  margin-bottom: 6px;
+}
+
+.flow-step.done .flow-dot {
+  background: var(--green);
+}
+
+.flow-step.active .flow-dot {
+  background: var(--yellow);
+  box-shadow: 0 0 8px var(--yellow);
+}
+
+.flow-step span {
+  font-weight: bold;
+}
 </style>
 </head>
 
@@ -126,8 +166,9 @@ button {
 
 <p><strong>Produto:</strong> <span id="opCodigo"></span></p>
 <p><strong>Quantidade:</strong> <span id="opQtd"></span></p>
-<p><strong>Laboratório Atual:</strong> <span id="opLab"></span></p>
-<p><strong>Status:</strong> <span class="tag">Aguardando Confirmação</span></p>
+
+<!-- FLUXOGRAMA -->
+<div class="flow" id="fluxograma"></div>
 
 <label>Observação (opcional)</label>
 <textarea id="obs" rows="2"></textarea>
@@ -143,7 +184,9 @@ let produto = JSON.parse(localStorage.getItem("produto_lab")) || null;
 function criarFluxo() {
   const codigo = document.getElementById("codigo").value;
   const quantidade = document.getElementById("quantidade").value;
-  const labsSelecionados = Array.from(document.getElementById("labs").selectedOptions).map(o => o.value);
+  const labsSelecionados = Array.from(
+    document.getElementById("labs").selectedOptions
+  ).map(o => o.value);
 
   if (!codigo || !quantidade || labsSelecionados.length === 0) {
     alert("Preencha todos os campos");
@@ -191,6 +234,26 @@ function salvar() {
   }
 }
 
+function renderizarFluxograma() {
+  const fluxoDiv = document.getElementById("fluxograma");
+  fluxoDiv.innerHTML = "";
+
+  produto.fluxo.forEach((lab, index) => {
+    const step = document.createElement("div");
+    step.className = "flow-step";
+
+    if (index < produto.etapa) step.classList.add("done");
+    if (index === produto.etapa) step.classList.add("active");
+
+    step.innerHTML = `
+      <div class="flow-dot"></div>
+      <span>${lab}</span>
+    `;
+
+    fluxoDiv.appendChild(step);
+  });
+}
+
 function renderizar() {
   if (!produto) {
     document.getElementById("criacao").classList.remove("hidden");
@@ -203,7 +266,8 @@ function renderizar() {
 
   document.getElementById("opCodigo").innerText = produto.codigo;
   document.getElementById("opQtd").innerText = produto.quantidade;
-  document.getElementById("opLab").innerText = produto.fluxo[produto.etapa];
+
+  renderizarFluxograma();
 }
 
 renderizar();
