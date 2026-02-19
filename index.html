@@ -3,153 +3,140 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Rastreamento por Laboratórios</title>
+<title>LIMS - Rastreamento Laboratórios</title>
 
 <style>
 :root {
-  --red: #d40511;
-  --yellow: #ffcc00;
-  --green: #2ecc71;
-  --gray: #ccc;
-  --bg: #f4f4f4;
+  --red:#d40511;
+  --yellow:#ffcc00;
+  --green:#2ecc71;
+  --gray:#ccc;
+  --bg:#f4f4f4;
 }
 
-body {
-  font-family: Arial, sans-serif;
-  background: var(--bg);
-  margin: 0;
-  padding: 20px;
+body{
+  font-family:Arial, sans-serif;
+  background:var(--bg);
+  margin:0;
+  padding:20px;
 }
 
-.container {
-  max-width: 700px;
-  margin: auto;
+.container{
+  max-width:900px;
+  margin:auto;
 }
 
-h1 {
-  color: var(--red);
-  border-bottom: 4px solid var(--yellow);
-  padding-bottom: 10px;
-  text-transform: uppercase;
+h1{
+  color:var(--red);
+  border-bottom:4px solid var(--yellow);
+  padding-bottom:10px;
 }
 
-.card {
-  background: white;
-  border-radius: 8px;
-  padding: 20px;
-  margin-bottom: 20px;
-  box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+.card{
+  background:white;
+  padding:20px;
+  border-radius:8px;
+  margin-bottom:20px;
+  box-shadow:0 4px 6px rgba(0,0,0,0.1);
 }
 
-label {
-  font-weight: bold;
-  display: block;
-  margin-top: 10px;
+input,select,textarea{
+  width:100%;
+  padding:10px;
+  margin-top:5px;
+  border-radius:5px;
+  border:1px solid #ccc;
+  font-size:16px;
 }
 
-input, textarea, select {
-  width: 100%;
-  padding: 12px;
-  margin-top: 5px;
-  border-radius: 4px;
-  border: 1px solid #ccc;
-  font-size: 16px;
+button{
+  width:100%;
+  padding:14px;
+  margin-top:15px;
+  border:none;
+  border-radius:6px;
+  font-size:16px;
+  font-weight:bold;
+  cursor:pointer;
 }
 
-button {
-  width: 100%;
-  padding: 15px;
-  margin-top: 15px;
-  border: none;
-  border-radius: 5px;
-  font-size: 18px;
-  font-weight: bold;
-  cursor: pointer;
-}
+.btn-main{ background:var(--red); color:white; }
+.btn-ok{ background:var(--green); color:white; }
+.btn-secondary{ background:#333; color:white; }
 
-.btn-main {
-  background: var(--red);
-  color: white;
-}
-
-.btn-ok {
-  background: var(--green);
-  color: white;
-}
-
-.hidden {
-  display: none;
-}
+.hidden{ display:none; }
 
 /* FLUXOGRAMA */
-.flow {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  margin: 25px 0;
-  position: relative;
+.flow{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  margin:25px 0;
+  position:relative;
 }
 
-.flow::before {
-  content: "";
-  position: absolute;
-  top: 50%;
-  left: 5%;
-  right: 5%;
-  height: 4px;
-  background: var(--gray);
-  z-index: 0;
+.flow::before{
+  content:"";
+  position:absolute;
+  top:50%;
+  left:5%;
+  right:5%;
+  height:4px;
+  background:var(--gray);
+  z-index:0;
 }
 
-.flow-step {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  z-index: 1;
-  width: 80px;
-  text-align: center;
-  font-size: 12px;
+.flow-step{
+  z-index:1;
+  text-align:center;
+  width:120px;
+  font-size:12px;
 }
 
-.flow-dot {
-  width: 22px;
-  height: 22px;
-  border-radius: 50%;
-  background: var(--gray);
-  margin-bottom: 6px;
+.dot{
+  width:22px;
+  height:22px;
+  border-radius:50%;
+  margin:auto;
+  margin-bottom:6px;
+  background:var(--gray);
 }
 
-.flow-step.done .flow-dot {
-  background: var(--green);
+.done .dot{ background:var(--green); }
+.active .dot{ background:var(--yellow); box-shadow:0 0 8px var(--yellow); }
+
+.history-item{
+  border-left:4px solid var(--yellow);
+  padding-left:10px;
+  margin-bottom:10px;
+  font-size:14px;
 }
 
-.flow-step.active .flow-dot {
-  background: var(--yellow);
-  box-shadow: 0 0 8px var(--yellow);
-}
-
-.flow-step span {
-  font-weight: bold;
+.tag{
+  background:var(--yellow);
+  padding:4px 8px;
+  font-size:12px;
+  border-radius:4px;
 }
 </style>
 </head>
 
 <body>
-
 <div class="container">
-<h1>Rastreamento por Laboratórios</h1>
 
-<!-- CRIAÇÃO DO FLUXO -->
+<h1>Sistema LIMS - Rastreamento</h1>
+
+<!-- CRIAÇÃO -->
 <div class="card" id="criacao">
-<h3>Abertura de Fluxo (Engenharia)</h3>
+<h3>Novo Fluxo</h3>
 
-<label>Código do Produto</label>
+<label>Código Produto</label>
 <input id="codigo">
 
 <label>Quantidade</label>
 <input type="number" id="quantidade">
 
-<label>Fluxo de Laboratórios</label>
+<label>Laboratórios (ordem importa)</label>
 <select multiple id="labs">
 <option>Avaliação</option>
 <option>Amostras</option>
@@ -160,117 +147,161 @@ button {
 <button class="btn-main" onclick="criarFluxo()">Criar Fluxo</button>
 </div>
 
-<!-- TELA DO OPERADOR -->
+<!-- BUSCA -->
+<div class="card">
+<h3>Buscar Fluxo</h3>
+<input id="busca" placeholder="Buscar por LIMS ou Produto" onkeyup="renderizarBusca()">
+<div id="resultadoBusca"></div>
+</div>
+
+<!-- OPERADOR -->
 <div class="card hidden" id="operador">
-<h3>Confirmação de Processo</h3>
+<h3>Operação</h3>
 
+<p><strong>LIMS:</strong> <span id="opLims"></span></p>
 <p><strong>Produto:</strong> <span id="opCodigo"></span></p>
-<p><strong>Quantidade:</strong> <span id="opQtd"></span></p>
+<p><strong>Qtd:</strong> <span id="opQtd"></span></p>
 
-<!-- FLUXOGRAMA -->
 <div class="flow" id="fluxograma"></div>
 
-<label>Observação (opcional)</label>
-<textarea id="obs" rows="2"></textarea>
+<textarea id="obs" placeholder="Observação (opcional)"></textarea>
 
-<button class="btn-ok" onclick="confirmar()">✅ TÁ TUDO OK</button>
+<button class="btn-ok" onclick="confirmar()">TÁ TUDO OK</button>
+<button class="btn-secondary" onclick="verHistorico()">Ver Histórico</button>
+</div>
+
+<!-- HISTÓRICO -->
+<div class="card hidden" id="historico">
+<h3>Histórico do Fluxo</h3>
+<div id="listaHistorico"></div>
+<button class="btn-secondary" onclick="voltarOperador()">Voltar</button>
 </div>
 
 </div>
 
 <script>
-let produto = JSON.parse(localStorage.getItem("produto_lab")) || null;
+let fluxos = JSON.parse(localStorage.getItem("fluxos_lims")) || [];
+let fluxoAtual = null;
 
-function criarFluxo() {
+function gerarLIMS(){
+  return "LIMS-" + Date.now();
+}
+
+function criarFluxo(){
   const codigo = document.getElementById("codigo").value;
   const quantidade = document.getElementById("quantidade").value;
-  const labsSelecionados = Array.from(
-    document.getElementById("labs").selectedOptions
-  ).map(o => o.value);
+  const labs = Array.from(document.getElementById("labs").selectedOptions).map(o=>o.value);
 
-  if (!codigo || !quantidade || labsSelecionados.length === 0) {
+  if(!codigo || !quantidade || labs.length===0){
     alert("Preencha todos os campos");
     return;
   }
 
-  produto = {
+  const novo = {
+    lims: gerarLIMS(),
     codigo,
     quantidade,
-    fluxo: labsSelecionados,
+    fluxo: labs,
     etapa: 0,
-    historico: []
+    historico:[]
   };
 
+  fluxos.unshift(novo);
   salvar();
-  renderizar();
+  alert("Fluxo criado: " + novo.lims);
+  document.getElementById("codigo").value="";
+  document.getElementById("quantidade").value="";
 }
 
-function confirmar() {
-  const obs = document.getElementById("obs").value;
-  const data = new Date().toLocaleString("pt-BR");
-
-  produto.historico.push({
-    lab: produto.fluxo[produto.etapa],
-    obs: obs || "Processo concluído sem observações",
-    data
-  });
-
-  produto.etapa++;
-  document.getElementById("obs").value = "";
-
-  if (produto.etapa >= produto.fluxo.length) {
-    alert("Fluxo finalizado com sucesso!");
-    localStorage.removeItem("produto_lab");
-    produto = null;
-  }
-
-  salvar();
-  renderizar();
+function salvar(){
+  localStorage.setItem("fluxos_lims", JSON.stringify(fluxos));
 }
 
-function salvar() {
-  if (produto) {
-    localStorage.setItem("produto_lab", JSON.stringify(produto));
-  }
+function renderizarBusca(){
+  const termo = document.getElementById("busca").value.toLowerCase();
+  const div = document.getElementById("resultadoBusca");
+  div.innerHTML="";
+
+  fluxos
+    .filter(f=>f.lims.toLowerCase().includes(termo) || f.codigo.toLowerCase().includes(termo))
+    .forEach(f=>{
+      div.innerHTML+=`
+        <div style="padding:8px; border-bottom:1px solid #ddd; cursor:pointer;"
+         onclick="abrirFluxo('${f.lims}')">
+         ${f.lims} | ${f.codigo}
+        </div>
+      `;
+    });
 }
 
-function renderizarFluxograma() {
-  const fluxoDiv = document.getElementById("fluxograma");
-  fluxoDiv.innerHTML = "";
-
-  produto.fluxo.forEach((lab, index) => {
-    const step = document.createElement("div");
-    step.className = "flow-step";
-
-    if (index < produto.etapa) step.classList.add("done");
-    if (index === produto.etapa) step.classList.add("active");
-
-    step.innerHTML = `
-      <div class="flow-dot"></div>
-      <span>${lab}</span>
-    `;
-
-    fluxoDiv.appendChild(step);
-  });
-}
-
-function renderizar() {
-  if (!produto) {
-    document.getElementById("criacao").classList.remove("hidden");
-    document.getElementById("operador").classList.add("hidden");
-    return;
-  }
-
-  document.getElementById("criacao").classList.add("hidden");
+function abrirFluxo(lims){
+  fluxoAtual = fluxos.find(f=>f.lims===lims);
   document.getElementById("operador").classList.remove("hidden");
-
-  document.getElementById("opCodigo").innerText = produto.codigo;
-  document.getElementById("opQtd").innerText = produto.quantidade;
-
-  renderizarFluxograma();
+  document.getElementById("historico").classList.add("hidden");
+  renderizarOperador();
 }
 
-renderizar();
+function renderizarOperador(){
+  document.getElementById("opLims").innerText=fluxoAtual.lims;
+  document.getElementById("opCodigo").innerText=fluxoAtual.codigo;
+  document.getElementById("opQtd").innerText=fluxoAtual.quantidade;
+
+  const div=document.getElementById("fluxograma");
+  div.innerHTML="";
+
+  fluxoAtual.fluxo.forEach((lab,index)=>{
+    let classe="flow-step";
+    if(index<fluxoAtual.etapa) classe+=" done";
+    if(index===fluxoAtual.etapa) classe+=" active";
+
+    div.innerHTML+=`
+      <div class="${classe}">
+        <div class="dot"></div>
+        ${lab}
+      </div>
+    `;
+  });
+}
+
+function confirmar(){
+  const obs=document.getElementById("obs").value;
+  const data=new Date().toLocaleString("pt-BR");
+
+  fluxoAtual.historico.push({
+    etapa: fluxoAtual.fluxo[fluxoAtual.etapa],
+    data,
+    obs: obs || "Sem observações"
+  });
+
+  fluxoAtual.etapa++;
+  document.getElementById("obs").value="";
+
+  salvar();
+  renderizarOperador();
+}
+
+function verHistorico(){
+  document.getElementById("operador").classList.add("hidden");
+  document.getElementById("historico").classList.remove("hidden");
+
+  const div=document.getElementById("listaHistorico");
+  div.innerHTML="";
+
+  fluxoAtual.historico.forEach(h=>{
+    div.innerHTML+=`
+      <div class="history-item">
+        <strong>${h.etapa}</strong><br>
+        ${h.data}<br>
+        ${h.obs}
+      </div>
+    `;
+  });
+}
+
+function voltarOperador(){
+  document.getElementById("historico").classList.add("hidden");
+  document.getElementById("operador").classList.remove("hidden");
+}
 </script>
 
 </body>
