@@ -9,11 +9,7 @@
     <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
 
     <style>
-        * {
-            box-sizing: border-box;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-        }
-
+        * { box-sizing: border-box; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
         :root {
             --primary: #1e3a8a;
             --primary-light: #3b82f6;
@@ -24,228 +20,44 @@
             --green: #10b981;
             --yellow: #f59e0b;
         }
-
-        body {
-            background-color: var(--bg);
-            color: var(--text);
-            margin: 0;
-            padding: 20px;
-        }
-
-        .container {
-            max-width: 1100px;
-            margin: 0 auto;
-        }
-
-        header {
-            text-align: center;
-            margin-bottom: 30px;
-            border-bottom: 4px solid var(--primary-light);
-            padding-bottom: 10px;
-        }
-
-        header h1 {
-            color: var(--primary);
-            margin: 0;
-            text-transform: uppercase;
-            font-size: 24pt;
-        }
-
-        header p {
-            margin: 5px 0 0 0;
-            color: #64748b;
-        }
-
-        .card {
-            background: var(--card-bg);
-            padding: 25px;
-            border-radius: 10px;
-            margin-bottom: 25px;
-            box-shadow: 0 4px 12px rgba(30, 58, 138, 0.08);
-        }
-
-        .card h2 {
-            color: var(--primary);
-            margin-top: 0;
-            margin-bottom: 20px;
-            font-size: 14pt;
-            border-left: 5px solid var(--primary-light);
-            padding-left: 10px;
-        }
-
-        .flex-container {
-            display: flex;
-            gap: 15px;
-            align-items: flex-end;
-            margin-bottom: 15px;
-        }
-
-        .flex-item {
-            flex: 1;
-        }
-
-        label {
-            font-weight: bold;
-            display: block;
-            margin-bottom: 8px;
-            color: #334155;
-        }
-
-        input, textarea {
-            width: 100%;
-            padding: 12px;
-            border-radius: 6px;
-            border: 1px solid var(--gray-light);
-            font-size: 11pt;
-            background: #f8fafc;
-        }
-
-        input:focus, textarea:focus {
-            outline: none;
-            border-color: var(--primary-light);
-            background: #fff;
-        }
-
-        button {
-            padding: 14px 24px;
-            border: none;
-            border-radius: 6px;
-            font-size: 11pt;
-            font-weight: bold;
-            cursor: pointer;
-            transition: all 0.2s;
-        }
-
-        .btn-primary {
-            background: var(--primary);
-            color: white;
-        }
-
-        .btn-primary:hover {
-            background: #172554;
-        }
-
-        .btn-success {
-            background: var(--green);
-            color: white;
-            width: 100%;
-        }
-
-        .btn-secondary {
-            background: #475569;
-            color: white;
-            width: 100%;
-        }
-
-        /* FLUXOGRAMA EM TABELA (RESPONSIVO E ADAPTADO) */
-        .flow-table {
-            width: 100%;
-            border-collapse: collapse;
-            margin: 25px 0;
-        }
-
-        .flow-table td {
-            text-align: center;
-            vertical-align: top;
-            padding: 10px 5px;
-            width: 12.5%;
-            position: relative;
-        }
-
-        .dot-container {
-            position: relative;
-            margin-bottom: 10px;
-            height: 24px;
-        }
-
-        .line-left, .line-right {
-            position: absolute;
-            top: 10px;
-            height: 4px;
-            background: var(--gray-light);
-            width: 50%;
-            z-index: 1;
-        }
-
+        body { background-color: var(--bg); color: var(--text); margin: 0; padding: 20px; }
+        .container { max-width: 1100px; margin: 0 auto; }
+        header { text-align: center; margin-bottom: 30px; border-bottom: 4px solid var(--primary-light); padding-bottom: 10px; }
+        header h1 { color: var(--primary); margin: 0; text-transform: uppercase; font-size: 24pt; }
+        header p { margin: 5px 0 0 0; color: #64748b; }
+        .card { background: var(--card-bg); padding: 25px; border-radius: 10px; margin-bottom: 25px; box-shadow: 0 4px 12px rgba(30, 58, 138, 0.08); }
+        .card h2 { color: var(--primary); margin-top: 0; margin-bottom: 20px; font-size: 14pt; border-left: 5px solid var(--primary-light); padding-left: 10px; }
+        .flex-container { display: flex; gap: 15px; align-items: flex-end; margin-bottom: 15px; }
+        .flex-item { flex: 1; }
+        label { font-weight: bold; display: block; margin-bottom: 8px; color: #334155; }
+        input, textarea { width: 100%; padding: 12px; border-radius: 6px; border: 1px solid var(--gray-light); font-size: 11pt; background: #f8fafc; }
+        input:focus, textarea:focus { outline: none; border-color: var(--primary-light); background: #fff; }
+        button { padding: 14px 24px; border: none; border-radius: 6px; font-size: 11pt; font-weight: bold; cursor: pointer; transition: all 0.2s; }
+        .btn-primary { background: var(--primary); color: white; }
+        .btn-primary:hover { background: #172554; }
+        .btn-success { background: var(--green); color: white; width: 100%; }
+        .btn-secondary { background: #475569; color: white; width: 100%; }
+        .flow-table { width: 100%; border-collapse: collapse; margin: 25px 0; }
+        .flow-table td { text-align: center; vertical-align: top; padding: 10px 5px; width: 12.5%; position: relative; }
+        .line-left, .line-right { position: absolute; top: 10px; height: 4px; background: var(--gray-light); width: 50%; z-index: 1; }
         .line-left { left: 0; }
         .line-right { right: 0; }
-
         .flow-table td:first-child .line-left { display: none; }
         .flow-table td:last-child .line-right { display: none; }
-
-        .dot {
-            width: 24px;
-            height: 24px;
-            border-radius: 50%;
-            background: var(--gray-light);
-            margin: 0 auto;
-            position: relative;
-            z-index: 2;
-            border: 2px solid #fff;
-        }
-
-        .step-name {
-            font-size: 9pt;
-            font-weight: 600;
-            color: #64748b;
-            word-wrap: break-word;
-        }
-
-        /* Estados do Fluxo */
+        .dot { width: 24px; height: 24px; border-radius: 50%; background: var(--gray-light); margin: 0 auto; position: relative; z-index: 2; border: 2px solid #fff; }
+        .step-name { font-size: 9pt; font-weight: 600; color: #64748b; word-wrap: break-word; }
         .done .dot { background: var(--green); }
         .done .line-left, .done .line-right { background: var(--green); }
         .done .step-name { color: var(--green); }
-
-        .active .dot { 
-            background: var(--yellow); 
-            box-shadow: 0 0 0 4px rgba(245, 158, 11, 0.3);
-        }
+        .active .dot { background: var(--yellow); box-shadow: 0 0 0 4px rgba(245, 158, 11, 0.3); }
         .active .line-left { background: var(--green); }
         .active .step-name { color: var(--primary); font-weight: bold; }
-
-        .history-item {
-            border-left: 4px solid var(--primary-light);
-            padding: 12px;
-            margin-bottom: 15px;
-            font-size: 10.5pt;
-            background: #f8fafc;
-            border-radius: 0 6px 6px 0;
-        }
-        
-        .delay-badge {
-            display: inline-block;
-            background: #e0f2fe;
-            color: #0369a1;
-            padding: 3px 8px;
-            border-radius: 4px;
-            font-weight: bold;
-            font-size: 9.5pt;
-            margin-top: 5px;
-        }
-
-        .barcode-mock {
-            font-family: 'Courier New', Courier, monospace;
-            background: #000;
-            color: #fff;
-            padding: 4px 8px;
-            letter-spacing: 2px;
-            font-weight: bold;
-            border-radius: 4px;
-            display: inline-block;
-            font-size: 10pt;
-        }
-
+        .history-item { border-left: 4px solid var(--primary-light); padding: 12px; margin-bottom: 15px; font-size: 10.5pt; background: #f8fafc; border-radius: 0 6px 6px 0; }
+        .delay-badge { display: inline-block; background: #e0f2fe; color: #0369a1; padding: 3px 8px; border-radius: 4px; font-weight: bold; font-size: 9.5pt; margin-top: 5px; }
+        .barcode-mock { font-family: 'Courier New', Courier, monospace; background: #000; color: #fff; padding: 4px 8px; letter-spacing: 2px; font-weight: bold; border-radius: 4px; display: inline-block; font-size: 10pt; }
         .hidden { display: none; }
-
-        .search-item {
-            padding: 12px;
-            border-bottom: 1px solid #e2e8f0;
-            cursor: pointer;
-            background: #fff;
-        }
-        .search-item:hover {
-            background: #f1f5f9;
-        }
+        .search-item { padding: 12px; border-bottom: 1px solid #e2e8f0; cursor: pointer; background: #fff; }
+        .search-item:hover { background: #f1f5f9; }
     </style>
 </head>
 <body>
@@ -281,7 +93,6 @@
 
     <div class="card hidden" id="operador">
         <h2>Painel de Controle da Amostra Ativa</h2>
-        
         <div style="display: flex; justify-content: space-between; background: #f8fafc; padding: 15px; border-radius: 8px; margin-bottom: 20px;">
             <div>
                 <p style="margin: 5px 0;"><strong>Código de Barras:</strong> <span class="barcode-mock" id="opLims"></span></p>
@@ -320,12 +131,11 @@
 </div>
 
 <script>
-// Configuração de Testes Inicial (Banco de dados Nuvem Público Temporário)
+// Banco de dados em nuvem público para testes instantâneos no GitHub Pages
 const firebaseConfig = {
     databaseURL: "https://lims-compressores-default-rtdb.firebaseio.com/"
 };
 
-// Inicializa Firebase
 firebase.initializeApp(firebaseConfig);
 const database = firebase.database();
 
@@ -345,15 +155,9 @@ let fluxoAtual = null;
 function criarFluxo(){
     const codigo = document.getElementById("codigo").value.trim().toUpperCase();
     const modelo = document.getElementById("modelo").value.trim();
-
-    if(!codigo){
-        alert("Por favor, insira ou bipe o Código de Barras.");
-        return;
-    }
-
+    if(!codigo){ alert("Por favor, insira ou bipe o Código de Barras."); return; }
     const agora = Date.now();
     
-    // Salva direto no Banco de Dados Nuvem
     database.ref('amostras/' + codigo).set({
         lims: codigo,
         modelo: modelo || "Compressor Padrão",
@@ -377,10 +181,8 @@ function renderizarBusca(){
     const termo = document.getElementById("busca").value.toUpperCase().trim();
     const div = document.getElementById("resultadoBusca");
     div.innerHTML = "";
-
     if(!termo) return;
 
-    // Busca em tempo real no banco de dados Firebase
     database.ref('amostras').orderByKey().startAt(termo).endAt(termo + "\uf8ff").once('value', (snapshot) => {
         snapshot.forEach((childSnapshot) => {
             const f = childSnapshot.val();
@@ -396,7 +198,6 @@ function renderizarBusca(){
 }
 
 function abrirFluxo(lims){
-    // Escuta mudanças em tempo real para este compressor específico
     database.ref('amostras/' + lims).on('value', (snapshot) => {
         fluxoAtual = snapshot.val();
         if(fluxoAtual) {
@@ -410,72 +211,41 @@ function abrirFluxo(lims){
 function renderizarOperador(){
     document.getElementById("opLims").innerText = fluxoAtual.lims;
     document.getElementById("opCodigo").innerText = fluxoAtual.modelo;
-    
     const statusTxt = fluxoAtual.etapa < FASES_PRODUCAO.length ? FASES_PRODUCAO[fluxoAtual.etapa] : "Finalizado";
     document.getElementById("opFaseAtual").innerText = statusTxt;
-
     const rowDots = document.getElementById("fluxogramaRowDots");
     const rowNames = document.getElementById("fluxogramaRowNames");
-    
-    rowDots.innerHTML = "";
-    rowNames.innerHTML = "";
+    rowDots.innerHTML = ""; rowNames.innerHTML = "";
 
     FASES_PRODUCAO.forEach((fase, index) => {
         let classe = "";
         if(index < fluxoAtual.etapa) classe = "done";
         else if(index === fluxoAtual.etapa) classe = "active";
-
-        rowDots.innerHTML += `
-            <td class="${classe}">
-                <div class="line-left"></div>
-                <div class="line-right"></div>
-                <div class="dot"></div>
-            </td>
-        `;
-
-        rowNames.innerHTML += `
-            <td class="${classe}">
-                <div class="step-name">${fase}</div>
-            </td>
-        `;
+        rowDots.innerHTML += `<td class="${classe}"><div class="line-left"></div><div class="line-right"></div><div class="dot"></div></td>`;
+        rowNames.innerHTML += `<td class="${classe}"><div class="step-name">${fase}</div></td>`;
     });
 }
 
 function confirmarEtapa(){
-    if (fluxoAtual.etapa >= FASES_PRODUCAO.length) {
-        alert("Este fluxo já está finalizado!");
-        return;
-    }
-
+    if (fluxoAtual.etapa >= FASES_PRODUCAO.length) { alert("Este fluxo já está finalizado!"); return; }
     const obs = document.getElementById("obs").value.trim();
     const agora = Date.now();
-    
     let historicoAtualizado = fluxoAtual.historico ? [...fluxoAtual.historico] : [];
     
-    // Fecha a etapa atual calculando o delay
     historicoAtualizado[fluxoAtual.etapa].concluido_em = agora;
     historicoAtualizado[fluxoAtual.etapa].obs = obs || "Passagem realizada.";
-
     const proximaEtapa = fluxoAtual.etapa + 1;
 
     if(proximaEtapa < FASES_PRODUCAO.length) {
-        historicoAtualizado.push({
-            etapa: FASES_PRODUCAO[proximaEtapa],
-            chegou_em: agora,
-            concluido_em: null,
-            obs: ""
-        });
+        historicoAtualizado.push({ etapa: FASES_PRODUCAO[proximaEtapa], chegou_em: agora, concluido_em: null, obs: "" });
     }
 
-    // Atualiza o banco na nuvem
     database.ref('amostras/' + fluxoAtual.lims).update({
         etapa: proximaEtapa,
         historico: historicoAtualizado
     }).then(() => {
         document.getElementById("obs").value = "";
-        if(proximaEtapa >= FASES_PRODUCAO.length) {
-            alert("Ciclo completo finalizado!");
-        }
+        if(proximaEtapa >= FASES_PRODUCAO.length) { alert("Ciclo completo finalizado!"); }
     });
 }
 
@@ -483,10 +253,8 @@ function calcularDelay(inicio, fim) {
     const term = fim ? fim : Date.now();
     const diffMs = term - inicio;
     const diffMins = Math.round(diffMs / 60000);
-    
-    if(diffMins < 1) return "Menos de 1 min (Instantâneo)";
+    if(diffMins < 1) return "Menos de 1 min";
     if(diffMins < 60) return `${diffMins} min`;
-    
     const horas = Math.floor(diffMins / 60);
     const minsRestantes = diffMins % 60;
     return `${horas}h e ${minsRestantes}min`;
@@ -495,22 +263,18 @@ function calcularDelay(inicio, fim) {
 function verHistorico(){
     document.getElementById("operador").classList.add("hidden");
     document.getElementById("historico").classList.remove("hidden");
-
     const div = document.getElementById("listaHistorico");
     div.innerHTML = "";
 
     fluxoAtual.historico.forEach(h => {
         const tempoGasto = calcularDelay(h.chegou_em, h.concluido_em);
         const status = h.concluido_em ? "Concluído" : "🚨 Em andamento (Contando delay)";
-        
         div.innerHTML += `
             <div class="history-item">
-                <strong>📍 Fase: ${h.etapa}</strong> 
-                <span style="float:right; font-size:9pt; background:#cbd5e1; padding:2px 6px; border-radius:4px;">${status}</span>
-                <br><br>
+                <strong>📍 Fase: ${h.etapa}</strong> <span style="float:right; font-size:9pt; background:#cbd5e1; padding:2px 6px; border-radius:4px;">${status}</span><br><br>
                 <span>⏱️ Entrada: ${new Date(h.chegou_em).toLocaleString("pt-BR")}</span><br>
                 <span>🏁 Saída: ${h.concluido_em ? new Date(h.concluido_em).toLocaleString("pt-BR") : "Pendente"}</span><br>
-                <div class="delay-badge">Tempo gasto na etapa: ${tempoGasto}</div>
+                <div class="delay-badge">Tempo gasto: ${tempoGasto}</div>
                 <p style="margin: 8px 0 0 0; font-style: italic; color:#475569;">Obs: ${h.obs}</p>
             </div>
         `;
@@ -522,6 +286,5 @@ function voltarOperador(){
     document.getElementById("operador").classList.remove("hidden");
 }
 </script>
-
 </body>
 </html>
