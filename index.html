@@ -1,290 +1,472 @@
 <!DOCTYPE html>
-<html lang="pt-BR">
+<html lang="pt-br">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>LIMS - Rastreamento de Compressores</title>
-    
-    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Rastreamento por Laboratórios</title>
+<title>LIMS - Rastreamento Laboratórios</title>
 
-    <style>
-        * { box-sizing: border-box; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
-        :root {
-            --primary: #1e3a8a;
-            --primary-light: #3b82f6;
-            --bg: #f0f4f8;
-            --card-bg: #ffffff;
-            --text: #1e293b;
-            --gray-light: #cbd5e1;
-            --green: #10b981;
-            --yellow: #f59e0b;
-        }
-        body { background-color: var(--bg); color: var(--text); margin: 0; padding: 20px; }
-        .container { max-width: 1100px; margin: 0 auto; }
-        header { text-align: center; margin-bottom: 30px; border-bottom: 4px solid var(--primary-light); padding-bottom: 10px; }
-        header h1 { color: var(--primary); margin: 0; text-transform: uppercase; font-size: 24pt; }
-        header p { margin: 5px 0 0 0; color: #64748b; }
-        .card { background: var(--card-bg); padding: 25px; border-radius: 10px; margin-bottom: 25px; box-shadow: 0 4px 12px rgba(30, 58, 138, 0.08); }
-        .card h2 { color: var(--primary); margin-top: 0; margin-bottom: 20px; font-size: 14pt; border-left: 5px solid var(--primary-light); padding-left: 10px; }
-        .flex-container { display: flex; gap: 15px; align-items: flex-end; margin-bottom: 15px; }
-        .flex-item { flex: 1; }
-        label { font-weight: bold; display: block; margin-bottom: 8px; color: #334155; }
-        input, textarea { width: 100%; padding: 12px; border-radius: 6px; border: 1px solid var(--gray-light); font-size: 11pt; background: #f8fafc; }
-        input:focus, textarea:focus { outline: none; border-color: var(--primary-light); background: #fff; }
-        button { padding: 14px 24px; border: none; border-radius: 6px; font-size: 11pt; font-weight: bold; cursor: pointer; transition: all 0.2s; }
-        .btn-primary { background: var(--primary); color: white; }
-        .btn-primary:hover { background: #172554; }
-        .btn-success { background: var(--green); color: white; width: 100%; }
-        .btn-secondary { background: #475569; color: white; width: 100%; }
-        .flow-table { width: 100%; border-collapse: collapse; margin: 25px 0; }
-        .flow-table td { text-align: center; vertical-align: top; padding: 10px 5px; width: 12.5%; position: relative; }
-        .line-left, .line-right { position: absolute; top: 10px; height: 4px; background: var(--gray-light); width: 50%; z-index: 1; }
-        .line-left { left: 0; }
-        .line-right { right: 0; }
-        .flow-table td:first-child .line-left { display: none; }
-        .flow-table td:last-child .line-right { display: none; }
-        .dot { width: 24px; height: 24px; border-radius: 50%; background: var(--gray-light); margin: 0 auto; position: relative; z-index: 2; border: 2px solid #fff; }
-        .step-name { font-size: 9pt; font-weight: 600; color: #64748b; word-wrap: break-word; }
-        .done .dot { background: var(--green); }
-        .done .line-left, .done .line-right { background: var(--green); }
-        .done .step-name { color: var(--green); }
-        .active .dot { background: var(--yellow); box-shadow: 0 0 0 4px rgba(245, 158, 11, 0.3); }
-        .active .line-left { background: var(--green); }
-        .active .step-name { color: var(--primary); font-weight: bold; }
-        .history-item { border-left: 4px solid var(--primary-light); padding: 12px; margin-bottom: 15px; font-size: 10.5pt; background: #f8fafc; border-radius: 0 6px 6px 0; }
-        .delay-badge { display: inline-block; background: #e0f2fe; color: #0369a1; padding: 3px 8px; border-radius: 4px; font-weight: bold; font-size: 9.5pt; margin-top: 5px; }
-        .barcode-mock { font-family: 'Courier New', Courier, monospace; background: #000; color: #fff; padding: 4px 8px; letter-spacing: 2px; font-weight: bold; border-radius: 4px; display: inline-block; font-size: 10pt; }
-        .hidden { display: none; }
-        .search-item { padding: 12px; border-bottom: 1px solid #e2e8f0; cursor: pointer; background: #fff; }
-        .search-item:hover { background: #f1f5f9; }
-    </style>
+<style>
+:root {
+  --red: #d40511;
+  --yellow: #ffcc00;
+  --green: #2ecc71;
+  --gray: #ccc;
+  --bg: #f4f4f4;
+  --red:#d40511;
+  --yellow:#ffcc00;
+  --green:#2ecc71;
+  --gray:#ccc;
+  --bg:#f4f4f4;
+}
+
+body {
+  font-family: Arial, sans-serif;
+  background: var(--bg);
+  margin: 0;
+  padding: 20px;
+body{
+  font-family:Arial, sans-serif;
+  background:var(--bg);
+  margin:0;
+  padding:20px;
+}
+
+.container {
+  max-width: 700px;
+  margin: auto;
+.container{
+  max-width:900px;
+  margin:auto;
+}
+
+h1 {
+  color: var(--red);
+  border-bottom: 4px solid var(--yellow);
+  padding-bottom: 10px;
+  text-transform: uppercase;
+h1{
+  color:var(--red);
+  border-bottom:4px solid var(--yellow);
+  padding-bottom:10px;
+}
+
+.card {
+  background: white;
+  border-radius: 8px;
+  padding: 20px;
+  margin-bottom: 20px;
+  box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+.card{
+  background:white;
+  padding:20px;
+  border-radius:8px;
+  margin-bottom:20px;
+  box-shadow:0 4px 6px rgba(0,0,0,0.1);
+}
+
+label {
+  font-weight: bold;
+  display: block;
+  margin-top: 10px;
+input,select,textarea{
+  width:100%;
+  padding:10px;
+  margin-top:5px;
+  border-radius:5px;
+  border:1px solid #ccc;
+  font-size:16px;
+}
+
+input, textarea, select {
+  width: 100%;
+  padding: 12px;
+  margin-top: 5px;
+  border-radius: 4px;
+  border: 1px solid #ccc;
+  font-size: 16px;
+button{
+  width:100%;
+  padding:14px;
+  margin-top:15px;
+  border:none;
+  border-radius:6px;
+  font-size:16px;
+  font-weight:bold;
+  cursor:pointer;
+}
+
+button {
+  width: 100%;
+  padding: 15px;
+  margin-top: 15px;
+  border: none;
+  border-radius: 5px;
+  font-size: 18px;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.btn-main {
+  background: var(--red);
+  color: white;
+}
+
+.btn-ok {
+  background: var(--green);
+  color: white;
+}
+.btn-main{ background:var(--red); color:white; }
+.btn-ok{ background:var(--green); color:white; }
+.btn-secondary{ background:#333; color:white; }
+
+.hidden {
+  display: none;
+}
+.hidden{ display:none; }
+
+/* FLUXOGRAMA */
+.flow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin: 25px 0;
+  position: relative;
+.flow{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  margin:25px 0;
+  position:relative;
+}
+
+.flow::before {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 5%;
+  right: 5%;
+  height: 4px;
+  background: var(--gray);
+  z-index: 0;
+.flow::before{
+  content:"";
+  position:absolute;
+  top:50%;
+  left:5%;
+  right:5%;
+  height:4px;
+  background:var(--gray);
+  z-index:0;
+}
+
+.flow-step {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  z-index: 1;
+  width: 80px;
+  text-align: center;
+  font-size: 12px;
+.flow-step{
+  z-index:1;
+  text-align:center;
+  width:120px;
+  font-size:12px;
+}
+
+.flow-dot {
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background: var(--gray);
+  margin-bottom: 6px;
+.dot{
+  width:22px;
+  height:22px;
+  border-radius:50%;
+  margin:auto;
+  margin-bottom:6px;
+  background:var(--gray);
+}
+
+.flow-step.done .flow-dot {
+  background: var(--green);
+}
+.done .dot{ background:var(--green); }
+.active .dot{ background:var(--yellow); box-shadow:0 0 8px var(--yellow); }
+
+.flow-step.active .flow-dot {
+  background: var(--yellow);
+  box-shadow: 0 0 8px var(--yellow);
+.history-item{
+  border-left:4px solid var(--yellow);
+  padding-left:10px;
+  margin-bottom:10px;
+  font-size:14px;
+}
+
+.flow-step span {
+  font-weight: bold;
+.tag{
+  background:var(--yellow);
+  padding:4px 8px;
+  font-size:12px;
+  border-radius:4px;
+}
+</style>
 </head>
+
 <body>
 
 <div class="container">
-    <header>
-        <h1>LIMS - Rastreamento de Compressores</h1>
-        <p>Controle Nuvem de Amostras e Identificação de Delays por Código de Barras</p>
-    </header>
+<h1>Rastreamento por Laboratórios</h1>
 
-    <div class="card" id="criacao">
-        <h2>[+] Cadastrar Nova Amostra / Entrada</h2>
-        <div class="flex-container">
-            <div class="flex-item" style="flex: 2;">
-                <label>Bipar Código de Barras do Compressor (ID Único)</label>
-                <input id="codigo" placeholder="Bipe a etiqueta aqui...">
-            </div>
-            <div class="flex-item" style="flex: 2;">
-                <label>Modelo / Descrição do Compressor</label>
-                <input id="modelo" placeholder="Ex: Inverter 12HP">
-            </div>
-            <div class="flex-item" style="flex: 1;">
-                <button class="btn-primary" style="width: 100%;" onclick="criarFluxo()">Registrar</button>
-            </div>
-        </div>
-    </div>
+<!-- CRIAÇÃO DO FLUXO -->
+<h1>Sistema LIMS - Rastreamento</h1>
 
-    <div class="card">
-        <h2>🔍 BIPAR CÓDIGO DE BARRAS (Pesquisa ou Avanço)</h2>
-        <input id="busca" placeholder="Posicione o cursor aqui e bipe o código do compressor..." onkeyup="renderizarBusca()">
-        <div id="resultadoBusca" style="margin-top:10px; border-radius: 6px; overflow: hidden;"></div>
-    </div>
+<!-- CRIAÇÃO -->
+<div class="card" id="criacao">
+<h3>Abertura de Fluxo (Engenharia)</h3>
+<h3>Novo Fluxo</h3>
 
-    <div class="card hidden" id="operador">
-        <h2>Painel de Controle da Amostra Ativa</h2>
-        <div style="display: flex; justify-content: space-between; background: #f8fafc; padding: 15px; border-radius: 8px; margin-bottom: 20px;">
-            <div>
-                <p style="margin: 5px 0;"><strong>Código de Barras:</strong> <span class="barcode-mock" id="opLims"></span></p>
-                <p style="margin: 5px 0;"><strong>Modelo/Descrição:</strong> <span id="opCodigo"></span></p>
-            </div>
-            <div style="text-align: right;">
-                <p style="margin: 5px 0;"><strong>Fase Atual:</strong> <span id="opFaseAtual" style="font-weight:bold; color:var(--primary);"></span></p>
-            </div>
-        </div>
+<label>Código do Produto</label>
+<label>Código Produto</label>
+<input id="codigo">
 
-        <table class="flow-table">
-            <tr id="fluxogramaRowDots"></tr>
-            <tr id="fluxogramaRowNames"></tr>
-        </table>
+<label>Quantidade</label>
+<input type="number" id="quantidade">
 
-        <div style="margin-top: 25px;">
-            <label>Observação / Apontamento desta Fase (Opcional):</label>
-            <textarea id="obs" placeholder="Caso haja algum problema ou justificativa para delay, registre aqui..." rows="2"></textarea>
-        </div>
+<label>Fluxo de Laboratórios</label>
+<label>Laboratórios (ordem importa)</label>
+<select multiple id="labs">
+<option>Avaliação</option>
+<option>Amostras</option>
+@@ -160,117 +147,161 @@
+<button class="btn-main" onclick="criarFluxo()">Criar Fluxo</button>
+</div>
 
-        <div style="display: flex; gap: 15px; margin-top: 20px;">
-            <div style="flex: 2;">
-                <button class="btn-success" onclick="confirmarEtapa()">📥 CONCLUIR E AVANÇAR ETAPA</button>
-            </div>
-            <div style="flex: 1;">
-                <button class="btn-secondary" onclick="verHistorico()">📋 VER HISTÓRICO / DELAYS</button>
-            </div>
-        </div>
-    </div>
+<!-- TELA DO OPERADOR -->
+<!-- BUSCA -->
+<div class="card">
+<h3>Buscar Fluxo</h3>
+<input id="busca" placeholder="Buscar por LIMS ou Produto" onkeyup="renderizarBusca()">
+<div id="resultadoBusca"></div>
+</div>
 
-    <div class="card hidden" id="historico">
-        <h2>Auditoria de Gargalos e Tempos de Permanência</h2>
-        <div id="listaHistorico"></div>
-        <button class="btn-secondary" onclick="voltarOperador()" style="margin-top: 15px; width: auto;">Voltar para Painel</button>
-    </div>
+<!-- OPERADOR -->
+<div class="card hidden" id="operador">
+<h3>Confirmação de Processo</h3>
+<h3>Operação</h3>
+
+<p><strong>LIMS:</strong> <span id="opLims"></span></p>
+<p><strong>Produto:</strong> <span id="opCodigo"></span></p>
+<p><strong>Quantidade:</strong> <span id="opQtd"></span></p>
+<p><strong>Qtd:</strong> <span id="opQtd"></span></p>
+
+<!-- FLUXOGRAMA -->
+<div class="flow" id="fluxograma"></div>
+
+<label>Observação (opcional)</label>
+<textarea id="obs" rows="2"></textarea>
+<textarea id="obs" placeholder="Observação (opcional)"></textarea>
+
+<button class="btn-ok" onclick="confirmar()">TÁ TUDO OK</button>
+<button class="btn-secondary" onclick="verHistorico()">Ver Histórico</button>
+</div>
+
+<button class="btn-ok" onclick="confirmar()">✅ TÁ TUDO OK</button>
+<!-- HISTÓRICO -->
+<div class="card hidden" id="historico">
+<h3>Histórico do Fluxo</h3>
+<div id="listaHistorico"></div>
+<button class="btn-secondary" onclick="voltarOperador()">Voltar</button>
+</div>
+
 </div>
 
 <script>
-// Banco de dados em nuvem público para testes instantâneos no GitHub Pages
-const firebaseConfig = {
-    databaseURL: "https://lims-compressores-default-rtdb.firebaseio.com/"
-};
-
-firebase.initializeApp(firebaseConfig);
-const database = firebase.database();
-
-const FASES_PRODUCAO = [
-    "Customer care",
-    "Aprovações fusion",
-    "Plano de produção",
-    "Estoque",
-    "Movimentação expedição",
-    "Pesagem",
-    "Delivery",
-    "Customer feedback"
-];
-
+let produto = JSON.parse(localStorage.getItem("produto_lab")) || null;
+let fluxos = JSON.parse(localStorage.getItem("fluxos_lims")) || [];
 let fluxoAtual = null;
 
+function gerarLIMS(){
+  return "LIMS-" + Date.now();
+}
+
+function criarFluxo() {
 function criarFluxo(){
-    const codigo = document.getElementById("codigo").value.trim().toUpperCase();
-    const modelo = document.getElementById("modelo").value.trim();
-    if(!codigo){ alert("Por favor, insira ou bipe o Código de Barras."); return; }
-    const agora = Date.now();
-    
-    database.ref('amostras/' + codigo).set({
-        lims: codigo,
-        modelo: modelo || "Compressor Padrão",
-        etapa: 0,
-        criado_em: agora,
-        historico: [{
-            etapa: FASES_PRODUCAO[0],
-            chegou_em: agora,
-            concluido_em: null,
-            obs: "Entrada inicial no sistema."
-        }]
-    }).then(() => {
-        alert("Compressor registrado na nuvem!");
-        document.getElementById("codigo").value = "";
-        document.getElementById("modelo").value = "";
-        abrirFluxo(codigo);
-    });
+  const codigo = document.getElementById("codigo").value;
+  const quantidade = document.getElementById("quantidade").value;
+  const labsSelecionados = Array.from(
+    document.getElementById("labs").selectedOptions
+  ).map(o => o.value);
+  const labs = Array.from(document.getElementById("labs").selectedOptions).map(o=>o.value);
+
+  if (!codigo || !quantidade || labsSelecionados.length === 0) {
+  if(!codigo || !quantidade || labs.length===0){
+    alert("Preencha todos os campos");
+    return;
+  }
+
+  produto = {
+  const novo = {
+    lims: gerarLIMS(),
+    codigo,
+    quantidade,
+    fluxo: labsSelecionados,
+    fluxo: labs,
+    etapa: 0,
+    historico: []
+    historico:[]
+  };
+
+  fluxos.unshift(novo);
+  salvar();
+  renderizar();
+  alert("Fluxo criado: " + novo.lims);
+  document.getElementById("codigo").value="";
+  document.getElementById("quantidade").value="";
 }
 
+function confirmar() {
+  const obs = document.getElementById("obs").value;
+  const data = new Date().toLocaleString("pt-BR");
+
+  produto.historico.push({
+    lab: produto.fluxo[produto.etapa],
+    obs: obs || "Processo concluído sem observações",
+    data
+  });
+
+  produto.etapa++;
+  document.getElementById("obs").value = "";
+
+  if (produto.etapa >= produto.fluxo.length) {
+    alert("Fluxo finalizado com sucesso!");
+    localStorage.removeItem("produto_lab");
+    produto = null;
+  }
+function salvar(){
+  localStorage.setItem("fluxos_lims", JSON.stringify(fluxos));
+}
+
+  salvar();
+  renderizar();
 function renderizarBusca(){
-    const termo = document.getElementById("busca").value.toUpperCase().trim();
-    const div = document.getElementById("resultadoBusca");
-    div.innerHTML = "";
-    if(!termo) return;
+  const termo = document.getElementById("busca").value.toLowerCase();
+  const div = document.getElementById("resultadoBusca");
+  div.innerHTML="";
 
-    database.ref('amostras').orderByKey().startAt(termo).endAt(termo + "\uf8ff").once('value', (snapshot) => {
-        snapshot.forEach((childSnapshot) => {
-            const f = childSnapshot.val();
-            const faseNome = f.etapa < FASES_PRODUCAO.length ? FASES_PRODUCAO[f.etapa] : "🏁 Concluído";
-            div.innerHTML += `
-                <div class="search-item" onclick="abrirFluxo('${f.lims}')">
-                    <strong>║▌║█║  ${f.lims}</strong> | ${f.modelo} <br>
-                    <small style="color: #64748b;">Fase Atual: <span style="color:var(--primary); font-weight:bold;">${faseNome}</span></small>
-                </div>
-            `;
-        });
+  fluxos
+    .filter(f=>f.lims.toLowerCase().includes(termo) || f.codigo.toLowerCase().includes(termo))
+    .forEach(f=>{
+      div.innerHTML+=`
+        <div style="padding:8px; border-bottom:1px solid #ddd; cursor:pointer;"
+         onclick="abrirFluxo('${f.lims}')">
+         ${f.lims} | ${f.codigo}
+        </div>
+      `;
     });
 }
 
+function salvar() {
+  if (produto) {
+    localStorage.setItem("produto_lab", JSON.stringify(produto));
+  }
 function abrirFluxo(lims){
-    database.ref('amostras/' + lims).on('value', (snapshot) => {
-        fluxoAtual = snapshot.val();
-        if(fluxoAtual) {
-            document.getElementById("operador").classList.remove("hidden");
-            document.getElementById("historico").classList.add("hidden");
-            renderizarOperador();
-        }
-    });
+  fluxoAtual = fluxos.find(f=>f.lims===lims);
+  document.getElementById("operador").classList.remove("hidden");
+  document.getElementById("historico").classList.add("hidden");
+  renderizarOperador();
 }
 
+function renderizarFluxograma() {
+  const fluxoDiv = document.getElementById("fluxograma");
+  fluxoDiv.innerHTML = "";
 function renderizarOperador(){
-    document.getElementById("opLims").innerText = fluxoAtual.lims;
-    document.getElementById("opCodigo").innerText = fluxoAtual.modelo;
-    const statusTxt = fluxoAtual.etapa < FASES_PRODUCAO.length ? FASES_PRODUCAO[fluxoAtual.etapa] : "Finalizado";
-    document.getElementById("opFaseAtual").innerText = statusTxt;
-    const rowDots = document.getElementById("fluxogramaRowDots");
-    const rowNames = document.getElementById("fluxogramaRowNames");
-    rowDots.innerHTML = ""; rowNames.innerHTML = "";
+  document.getElementById("opLims").innerText=fluxoAtual.lims;
+  document.getElementById("opCodigo").innerText=fluxoAtual.codigo;
+  document.getElementById("opQtd").innerText=fluxoAtual.quantidade;
 
-    FASES_PRODUCAO.forEach((fase, index) => {
-        let classe = "";
-        if(index < fluxoAtual.etapa) classe = "done";
-        else if(index === fluxoAtual.etapa) classe = "active";
-        rowDots.innerHTML += `<td class="${classe}"><div class="line-left"></div><div class="line-right"></div><div class="dot"></div></td>`;
-        rowNames.innerHTML += `<td class="${classe}"><div class="step-name">${fase}</div></td>`;
-    });
+  produto.fluxo.forEach((lab, index) => {
+    const step = document.createElement("div");
+    step.className = "flow-step";
+  const div=document.getElementById("fluxograma");
+  div.innerHTML="";
+
+    if (index < produto.etapa) step.classList.add("done");
+    if (index === produto.etapa) step.classList.add("active");
+  fluxoAtual.fluxo.forEach((lab,index)=>{
+    let classe="flow-step";
+    if(index<fluxoAtual.etapa) classe+=" done";
+    if(index===fluxoAtual.etapa) classe+=" active";
+
+    step.innerHTML = `
+      <div class="flow-dot"></div>
+      <span>${lab}</span>
+    div.innerHTML+=`
+      <div class="${classe}">
+        <div class="dot"></div>
+        ${lab}
+      </div>
+    `;
+
+    fluxoDiv.appendChild(step);
+  });
 }
 
-function confirmarEtapa(){
-    if (fluxoAtual.etapa >= FASES_PRODUCAO.length) { alert("Este fluxo já está finalizado!"); return; }
-    const obs = document.getElementById("obs").value.trim();
-    const agora = Date.now();
-    let historicoAtualizado = fluxoAtual.historico ? [...fluxoAtual.historico] : [];
-    
-    historicoAtualizado[fluxoAtual.etapa].concluido_em = agora;
-    historicoAtualizado[fluxoAtual.etapa].obs = obs || "Passagem realizada.";
-    const proximaEtapa = fluxoAtual.etapa + 1;
-
-    if(proximaEtapa < FASES_PRODUCAO.length) {
-        historicoAtualizado.push({ etapa: FASES_PRODUCAO[proximaEtapa], chegou_em: agora, concluido_em: null, obs: "" });
-    }
-
-    database.ref('amostras/' + fluxoAtual.lims).update({
-        etapa: proximaEtapa,
-        historico: historicoAtualizado
-    }).then(() => {
-        document.getElementById("obs").value = "";
-        if(proximaEtapa >= FASES_PRODUCAO.length) { alert("Ciclo completo finalizado!"); }
-    });
-}
-
-function calcularDelay(inicio, fim) {
-    const term = fim ? fim : Date.now();
-    const diffMs = term - inicio;
-    const diffMins = Math.round(diffMs / 60000);
-    if(diffMins < 1) return "Menos de 1 min";
-    if(diffMins < 60) return `${diffMins} min`;
-    const horas = Math.floor(diffMins / 60);
-    const minsRestantes = diffMins % 60;
-    return `${horas}h e ${minsRestantes}min`;
-}
-
-function verHistorico(){
+function renderizar() {
+  if (!produto) {
+    document.getElementById("criacao").classList.remove("hidden");
     document.getElementById("operador").classList.add("hidden");
-    document.getElementById("historico").classList.remove("hidden");
-    const div = document.getElementById("listaHistorico");
-    div.innerHTML = "";
+    return;
+  }
+function confirmar(){
+  const obs=document.getElementById("obs").value;
+  const data=new Date().toLocaleString("pt-BR");
 
-    fluxoAtual.historico.forEach(h => {
-        const tempoGasto = calcularDelay(h.chegou_em, h.concluido_em);
-        const status = h.concluido_em ? "Concluído" : "🚨 Em andamento (Contando delay)";
-        div.innerHTML += `
-            <div class="history-item">
-                <strong>📍 Fase: ${h.etapa}</strong> <span style="float:right; font-size:9pt; background:#cbd5e1; padding:2px 6px; border-radius:4px;">${status}</span><br><br>
-                <span>⏱️ Entrada: ${new Date(h.chegou_em).toLocaleString("pt-BR")}</span><br>
-                <span>🏁 Saída: ${h.concluido_em ? new Date(h.concluido_em).toLocaleString("pt-BR") : "Pendente"}</span><br>
-                <div class="delay-badge">Tempo gasto: ${tempoGasto}</div>
-                <p style="margin: 8px 0 0 0; font-style: italic; color:#475569;">Obs: ${h.obs}</p>
-            </div>
-        `;
-    });
+  document.getElementById("criacao").classList.add("hidden");
+  document.getElementById("operador").classList.remove("hidden");
+  fluxoAtual.historico.push({
+    etapa: fluxoAtual.fluxo[fluxoAtual.etapa],
+    data,
+    obs: obs || "Sem observações"
+  });
+
+  document.getElementById("opCodigo").innerText = produto.codigo;
+  document.getElementById("opQtd").innerText = produto.quantidade;
+  fluxoAtual.etapa++;
+  document.getElementById("obs").value="";
+
+  renderizarFluxograma();
+  salvar();
+  renderizarOperador();
+}
+
+renderizar();
+function verHistorico(){
+  document.getElementById("operador").classList.add("hidden");
+  document.getElementById("historico").classList.remove("hidden");
+
+  const div=document.getElementById("listaHistorico");
+  div.innerHTML="";
+
+  fluxoAtual.historico.forEach(h=>{
+    div.innerHTML+=`
+      <div class="history-item">
+        <strong>${h.etapa}</strong><br>
+        ${h.data}<br>
+        ${h.obs}
+      </div>
+    `;
+  });
 }
 
 function voltarOperador(){
-    document.getElementById("historico").classList.add("hidden");
-    document.getElementById("operador").classList.remove("hidden");
+  document.getElementById("historico").classList.add("hidden");
+  document.getElementById("operador").classList.remove("hidden");
 }
 </script>
+
 </body>
-</html>
